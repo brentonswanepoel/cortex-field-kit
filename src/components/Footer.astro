@@ -1,0 +1,37 @@
+---
+const base = import.meta.env.BASE_URL;
+const year = 2026;
+---
+
+<footer class="site-footer" data-pagefind-ignore>
+  <div class="wrap footer-grid">
+    <div>
+      <h2>Independence</h2>
+      <p class="disclaimer">
+        Cortex Field Kit is an independent project maintained by Brenton Swanepoel. It is not
+        affiliated with, endorsed, sponsored, or supported by Palo Alto Networks. Product names are
+        used only to describe the kind of work an entry relates to.
+      </p>
+    </div>
+    <div>
+      <h2>Catalogue</h2>
+      <ul>
+        <li><a href={`${base}assets/`}>Assets</a></li>
+        <li><a href={`${base}use-cases/`}>Use cases</a></li>
+        <li><a href={`${base}snippets/`}>Snippets</a></li>
+        <li><a href={`${base}roadmap/`}>Roadmap</a></li>
+        <li><a href={`${base}about/`}>About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Project</h2>
+      <ul>
+        <li><a href={`${base}search/`}>Search</a></li>
+        <li><a href={`${base}rss.xml`}>RSS feed</a></li>
+        <li><a href="https://github.com/brentonswanepoel/cortex-field-kit">GitHub repository</a></li>
+        <li><a href={`${base}about/`}>Contribution guide</a></li>
+      </ul>
+      <p>© {year} Brenton Swanepoel</p>
+    </div>
+  </div>
+</footer>

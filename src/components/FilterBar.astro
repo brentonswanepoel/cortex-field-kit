@@ -1,0 +1,91 @@
+---
+export interface FilterOption {
+  value: string;
+  label: string;
+}
+
+export interface FilterGroup {
+  name: string;
+  legend: string;
+  options: FilterOption[];
+}
+
+interface Props {
+  groups: FilterGroup[];
+}
+
+const { groups } = Astro.props;
+---
+
+<form id="catalogue-filters" class="filter-bar" aria-label="Filter the catalogue">
+  {
+    groups.map((group) => (
+      <fieldset>
+        <legend>{group.legend}</legend>
+        {group.options.map((option) => (
+          <label>
+            <input type="checkbox" name={group.name} value={option.value} />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </fieldset>
+    ))
+  }
+  <button id="clear-filters" class="text-button" type="button">Clear filters</button>
+</form>
+<p id="filter-count" aria-live="polite"></p>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#catalogue-filters');
+  const count = document.querySelector<HTMLElement>('#filter-count');
+  const empty = document.querySelector<HTMLElement>('#filter-empty');
+  const items = [...document.querySelectorAll<HTMLElement>('[data-catalogue-item]')];
+
+  if (form && count) {
+    const selected = (): Record<string, string[]> => {
+      const groups: Record<string, string[]> = {};
+      for (const [name, value] of new FormData(form).entries()) {
+        groups[name] ??= [];
+        groups[name].push(String(value));
+      }
+      return groups;
+    };
+
+    const apply = (): void => {
+      const groups = selected();
+      let visible = 0;
+      for (const item of items) {
+        let show = true;
+        for (const [name, values] of Object.entries(groups)) {
+          if (values.length === 0) continue;
+          const tokens = (item.dataset[name] ?? '').split(/\s+/).filter(Boolean);
+          if (!values.some((value) => tokens.includes(value))) show = false;
+        }
+        item.hidden = !show;
+        if (show) visible += 1;
+      }
+      const noun = visible === 1 ? 'entry' : 'entries';
+      count.textContent = `${visible} ${noun} shown`;
+      if (empty) empty.hidden = visible !== 0;
+      const params = new URLSearchParams();
+      for (const [name, values] of Object.entries(groups)) {
+        for (const value of values) params.append(name, value);
+      }
+      const query = params.toString();
+      const next = `${location.pathname}${query ? `?${query}` : ''}`;
+      history.replaceState(null, '', next);
+    };
+
+    const params = new URLSearchParams(location.search);
+    for (const input of form.querySelectorAll<HTMLInputElement>('input[type="checkbox"]')) {
+      input.checked = params.getAll(input.name).includes(input.value);
+    }
+
+    apply();
+    form.addEventListener('change', apply);
+    document.querySelector('#clear-filters')?.addEventListener('click', () => {
+      form.reset();
+      apply();
+    });
+  }
+</script>

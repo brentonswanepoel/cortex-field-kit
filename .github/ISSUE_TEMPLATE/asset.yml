@@ -1,0 +1,66 @@
+name: Asset
+description: Propose a reusable catalogue asset
+title: "[Asset] "
+labels:
+  - asset
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repository is public. Do not include customer names, data, logs, IP addresses, hostnames, tenant IDs, or emails. Use RFC 5737 or RFC 3849 documentation addresses and example.com domains if a sample value is required.
+  - type: dropdown
+    id: product
+    attributes:
+      label: Product
+      description: Which products the asset is for.
+      multiple: true
+      options:
+        - XSIAM
+        - XDR
+        - XSOAR
+        - Cortex Cloud
+    validations:
+      required: true
+  - type: dropdown
+    id: asset-type
+    attributes:
+      label: Asset type
+      options:
+        - Lab kit
+        - Correlation rule
+        - Parsing rule
+        - Modeling rule
+        - XQL hunt
+        - Playbook
+        - Integration
+        - Dashboard
+        - Template
+        - Migration kit
+        - Skill
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What a consultant would reuse, in sanitized language.
+      placeholder: Example hunt for a fictional tool, with a lab hostname under example.com.
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Desired status
+      options:
+        - Draft
+        - Beta
+        - Stable
+    validations:
+      required: true
+  - type: checkboxes
+    id: sanitised
+    attributes:
+      label: Confirmation
+      options:
+        - label: I confirm this issue contains no customer names, data, logs, IP addresses, hostnames, tenant IDs, or emails.
+          required: true

@@ -1,0 +1,14 @@
+---
+interface Props {
+  steps: string[];
+}
+
+const { steps } = Astro.props;
+---
+
+<section class="reuse" id="how-to-reuse" aria-labelledby="reuse-heading">
+  <h2 id="reuse-heading">How to reuse</h2>
+  <ol>
+    {steps.map((step) => <li>{step}</li>)}
+  </ol>
+</section>

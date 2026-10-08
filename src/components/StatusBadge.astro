@@ -1,0 +1,11 @@
+---
+import { statusLabel } from '../lib/format';
+
+interface Props {
+  status: 'draft' | 'beta' | 'stable' | 'deprecated';
+}
+
+const { status } = Astro.props;
+---
+
+<span class:list={['badge', `badge-${status}`]}>{statusLabel(status)}</span>

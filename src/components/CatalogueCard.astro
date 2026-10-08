@@ -1,0 +1,40 @@
+---
+import ExampleBadge from './ExampleBadge.astro';
+import StatusBadge from './StatusBadge.astro';
+import { collectionLabels, entryHref, formatDate, productLabel, typeLabel, type AnyEntry, type CatalogueCollection } from '../lib/format';
+
+interface Props {
+  collection: CatalogueCollection;
+  entry: AnyEntry;
+}
+
+const { collection, entry } = Astro.props;
+const data = entry.data;
+const status = 'status' in data ? data.status : undefined;
+const type = 'type' in data ? data.type : undefined;
+const version = 'version' in data ? data.version : undefined;
+---
+
+<article
+  class="card"
+  data-catalogue-item
+  data-product={data.products.join(' ')}
+  data-type={type ?? ''}
+  data-status={status ?? ''}
+>
+  <a href={entryHref(collection, entry.id)}>
+    <p class="kicker">
+      {collectionLabels[collection]}
+      {type ? ` · ${typeLabel(type)}` : ''}
+      {version ? ` · v${version}` : ''}
+    </p>
+    <h2>{data.title}</h2>
+    <p class="summary">{data.description}</p>
+    <p class="meta-line">
+      <ExampleBadge example={data.example} />
+      {status && <StatusBadge status={status} />}
+      <span>{data.products.map((product) => productLabel(product)).join(', ')}</span>
+      <time datetime={data.updated.toISOString()}>{formatDate(data.updated)}</time>
+    </p>
+  </a>
+</article>

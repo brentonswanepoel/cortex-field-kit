@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const description =
+  'About Cortex Field Kit, an independent public catalogue for Cortex Domain Consultants.';
+---
+
+<BaseLayout title="About" description={description}>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">About</p>
+      <h1>A field catalogue, in public</h1>
+      <p>{description}</p>
+    </header>
+    <div class="prose">
+      <p>
+        Cortex Field Kit is Brenton Swanepoel’s public portfolio and a catalogue of reusable use
+        cases and assets for other Cortex Domain Consultants. The work it describes sits around
+        Cortex XSIAM, Cortex XDR, Cortex XSOAR, and Cortex Cloud: hunts, correlation and parsing
+        ideas, playbooks, lab patterns, and the notes that make them reusable.
+      </p>
+      <h2>Independence</h2>
+      <p>
+        Cortex Field Kit is an independent project. It is not affiliated with, endorsed, sponsored,
+        or supported by Palo Alto Networks. Names of Palo Alto Networks products are used only so a
+        reader can tell which product an entry relates to.
+      </p>
+      <h2>No customer information</h2>
+      <p>
+        This repository is public. Entries, issues, and pull requests must not contain customer
+        names, data, logs, IP addresses, hostnames, tenant identifiers, or email addresses.
+        Documentation addresses from RFC 5737 and RFC 3849, and domains such as example.com, are
+        the only sample values that belong here. Seed content is marked with an Example badge so
+        it cannot be mistaken for a finished deliverable.
+      </p>
+      <p>
+        Implementation files for a real asset, including content packs and test data, stay in a
+        separate private repository. This site publishes the sanitized catalogue entry only.
+      </p>
+      <h2>How a change ships</h2>
+      <ol>
+        <li>Open a GitHub issue with the asset, use-case, or site-feature template.</li>
+        <li>When the request is complete, add the <code>agent-ready</code> label.</li>
+        <li>A check confirms the required fields and comments that the issue is queued, or names what is missing.</li>
+        <li>An agent opens a pull request. Brenton reviews every pull request. Nothing merges unattended.</li>
+        <li>After review and merge to <code>main</code>, GitHub Actions publishes the site.</li>
+      </ol>
+      <h2>Run it locally</h2>
+      <p>
+        Install dependencies with <code>npm install</code>, then start <code>npm run dev</code>.
+        Search is indexed by <code>npm run build</code>. The roadmap stays in its unavailable state
+        unless <code>GITHUB_TOKEN</code> is set for the build.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

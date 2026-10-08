@@ -1,0 +1,89 @@
+---
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AttackList from '../../components/AttackList.astro';
+import ExampleBadge from '../../components/ExampleBadge.astro';
+import RelatedList from '../../components/RelatedList.astro';
+import ReuseSteps from '../../components/ReuseSteps.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import { getCatalogue, getRelated } from '../../lib/catalogue';
+import { entryHref, formatDate, productLabel, statusLabel, typeLabel } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const { assets } = await getCatalogue();
+  return assets.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const related = await getRelated(entry);
+const data = entry.data;
+---
+
+<BaseLayout title={data.title} description={data.description}>
+  <article class="wrap">
+    <header class="page-head">
+      <nav aria-label="Breadcrumb">
+        <ol class="crumbs">
+          <li><a href={import.meta.env.BASE_URL}>Home</a></li>
+          <li aria-hidden="true">/</li>
+          <li><a href={`${import.meta.env.BASE_URL}assets/`}>Assets</a></li>
+          <li aria-hidden="true">/</li>
+          <li>{data.title}</li>
+        </ol>
+      </nav>
+      <p class="eyebrow">{typeLabel(data.type)} · {data.language}</p>
+      <h1 class="detail-title">{data.title}</h1>
+      <p class="meta-line">
+        <ExampleBadge example={data.example} />
+        <StatusBadge status={data.status} />
+      </p>
+      <p>{data.description}</p>
+      <dl class="meta-grid">
+        <div>
+          <dt>Status</dt>
+          <dd>{statusLabel(data.status)}</dd>
+        </div>
+        <div>
+          <dt>Version</dt>
+          <dd>v{data.version}</dd>
+        </div>
+        <div>
+          <dt>Products</dt>
+          <dd>{data.products.map((product) => productLabel(product)).join(', ')}</dd>
+        </div>
+        <div>
+          <dt>Language</dt>
+          <dd>{data.language}</dd>
+        </div>
+        <div>
+          <dt>Published</dt>
+          <dd><time datetime={data.published.toISOString()}>{formatDate(data.published)}</time></dd>
+        </div>
+        <div>
+          <dt>Updated</dt>
+          <dd><time datetime={data.updated.toISOString()}>{formatDate(data.updated)}</time></dd>
+        </div>
+      </dl>
+      {
+        data.attack.length > 0 && (
+          <div>
+            <h2 class="kicker">ATT&CK</h2>
+            <AttackList ids={data.attack} />
+          </div>
+        )
+      }
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    <ReuseSteps steps={data.reuse} />
+    <RelatedList items={related} />
+    <p class="disclaimer">
+      <a href={entryHref('assets', entry.id)}>Permalink</a>
+    </p>
+  </article>
+</BaseLayout>

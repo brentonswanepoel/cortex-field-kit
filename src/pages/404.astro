@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page not found" description="That Cortex Field Kit page does not exist." indexed={false}>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">404</p>
+      <h1>That page is not in the kit</h1>
+      <p>The address does not match a catalogue page.</p>
+      <div class="actions">
+        <a class="button primary" href={import.meta.env.BASE_URL}>Back home</a>
+        <a class="button secondary" href={`${import.meta.env.BASE_URL}search/`}>Search</a>
+      </div>
+    </header>
+  </div>
+</BaseLayout>

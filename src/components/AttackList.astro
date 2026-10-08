@@ -1,0 +1,21 @@
+---
+import { attackUrl } from '../lib/format';
+
+interface Props {
+  ids: string[];
+}
+
+const { ids } = Astro.props;
+---
+
+{
+  ids.length > 0 && (
+    <ul class="attack-list">
+      {ids.map((id) => (
+        <li>
+          <a href={attackUrl(id)}>{id}</a>
+        </li>
+      ))}
+    </ul>
+  )
+}

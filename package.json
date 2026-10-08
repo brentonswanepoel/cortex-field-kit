@@ -1,0 +1,36 @@
+{
+  "name": "cortex-field-kit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Public catalogue of reusable, sanitized Cortex use cases and assets.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build && pagefind --site dist",
+    "preview": "astro preview --host 127.0.0.1",
+    "check": "astro check",
+    "test": "node --test scripts/*.test.mjs",
+    "check:links": "node scripts/check-links.mjs",
+    "check:customer-info": "node scripts/check-customer-info.mjs",
+    "sync:labels": "node scripts/sync-labels.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.6.0",
+    "@fontsource/ibm-plex-mono": "^5.2.6",
+    "@fontsource/ibm-plex-sans": "^5.2.6",
+    "@fontsource/newsreader": "^5.2.8",
+    "astro": "^7.0.0",
+    "tailwindcss": "^4.1.0",
+    "@tailwindcss/vite": "^4.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "pagefind": "^1.4.0",
+    "typescript": "^5.9.0",
+    "yaml": "^2.8.0"
+  }
+}

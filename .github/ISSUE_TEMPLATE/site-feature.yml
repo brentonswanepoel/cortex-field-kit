@@ -1,0 +1,42 @@
+name: Site feature
+description: Propose a change to the Cortex Field Kit website
+title: "[Site] "
+labels:
+  - site-feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repository is public. Do not include customer names, data, logs, IP addresses, hostnames, tenant IDs, or emails.
+  - type: dropdown
+    id: page
+    attributes:
+      label: Page
+      description: Which part of the site this is about.
+      options:
+        - Home
+        - Assets
+        - Use cases
+        - Snippets
+        - Roadmap
+        - About
+        - Search
+        - RSS
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What should change, and how a visitor will notice.
+      placeholder: Add a status explanation to the asset detail page.
+    validations:
+      required: true
+  - type: checkboxes
+    id: sanitised
+    attributes:
+      label: Confirmation
+      options:
+        - label: I confirm this issue contains no customer names, data, logs, IP addresses, hostnames, tenant IDs, or emails.
+          required: true
