@@ -1,0 +1,66 @@
+---
+interface Props {
+  autofocus?: boolean;
+}
+
+const { autofocus = false } = Astro.props;
+const bundlePath = `${import.meta.env.BASE_URL}pagefind/`;
+---
+
+<div class="search-panel">
+  <div id="search"></div>
+  <p id="search-fallback" class="search-fallback" hidden>
+    The search index is created by the production build. Run <code>npm run build</code>, then
+    <code>npm run preview</code>, and open this page again.
+  </p>
+</div>
+
+<script define:vars={{ bundlePath, autofocus }}>
+  const fallback = document.getElementById('search-fallback');
+  const script = document.createElement('script');
+  script.src = `${bundlePath}pagefind-ui.js`;
+  script.onload = () => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `${bundlePath}pagefind-ui.css`;
+    document.head.appendChild(link);
+
+    const rewrite = (value) => {
+      if (!value) return value;
+      try {
+        const url = new URL(value, window.location.origin);
+        let path = url.pathname;
+        const base = bundlePath.replace(/pagefind\/$/, '');
+        if (!path.startsWith(base)) {
+          path = `${base.replace(/\/$/, '')}${path.startsWith('/') ? path : `/${path}`}`;
+        }
+        return `${path}${url.search}${url.hash}`;
+      } catch (error) {
+        return value;
+      }
+    };
+
+    new PagefindUI({
+      element: '#search',
+      bundlePath,
+      showImages: false,
+      showSubResults: true,
+      autofocus,
+      translations: {
+        placeholder: 'Search assets, use cases, and snippets',
+        zero_results: 'No catalogue entries match “[SEARCH_TERM]”',
+      },
+      processResult: (result) => {
+        result.url = rewrite(result.url);
+        if (Array.isArray(result.sub_results)) {
+          for (const sub of result.sub_results) sub.url = rewrite(sub.url);
+        }
+        return result;
+      },
+    });
+  };
+  script.onerror = () => {
+    if (fallback) fallback.hidden = false;
+  };
+  document.head.appendChild(script);
+</script>

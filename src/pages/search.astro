@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchPanel from '../components/SearchPanel.astro';
+---
+
+<BaseLayout
+  title="Search"
+  description="Search the Cortex Field Kit catalogue."
+  indexed={false}
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">Find</p>
+      <h1>Search</h1>
+      <p>Search example assets, use cases, and snippets. Results stay inside this site.</p>
+    </header>
+    <SearchPanel autofocus={true} />
+  </div>
+</BaseLayout>

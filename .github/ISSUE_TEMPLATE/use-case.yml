@@ -1,0 +1,50 @@
+name: Use case
+description: Propose a reusable use case for the library
+title: "[Use case] "
+labels:
+  - use-case
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repository is public. Describe the problem in generic terms. Do not include customer names, data, logs, IP addresses, hostnames, tenant IDs, or emails.
+  - type: dropdown
+    id: product
+    attributes:
+      label: Product
+      multiple: true
+      options:
+        - XSIAM
+        - XDR
+        - XSOAR
+        - Cortex Cloud
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: The consultant problem, without a customer story.
+    validations:
+      required: true
+  - type: textarea
+    id: data-sources
+    attributes:
+      label: Data sources
+      description: Synthetic or well-known public data sources only.
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      description: How a lab run would show the use case working.
+    validations:
+      required: true
+  - type: checkboxes
+    id: sanitised
+    attributes:
+      label: Confirmation
+      options:
+        - label: I confirm this issue contains no customer names, data, logs, IP addresses, hostnames, tenant IDs, or emails.
+          required: true

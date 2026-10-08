@@ -1,0 +1,12 @@
+- name: asset
+  color: "8a5a12"
+  description: Reusable catalogue asset
+- name: site-feature
+  color: "0f5c56"
+  description: Website feature or fix
+- name: use-case
+  color: "243056"
+  description: Use-case specification
+- name: agent-ready
+  color: "b45309"
+  description: Ready for an agent to open a pull request

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CatalogueCard from '../../components/CatalogueCard.astro';
+import FilterBar from '../../components/FilterBar.astro';
+import { getCatalogue } from '../../lib/catalogue';
+import { products, statuses } from '../../content.config';
+import { productLabel, statusLabel } from '../../lib/format';
+
+const { usecases } = await getCatalogue();
+const presentProducts = new Set(usecases.flatMap((entry) => entry.data.products));
+const presentStatuses = new Set(usecases.map((entry) => entry.data.status));
+const groups = [
+  {
+    name: 'product',
+    legend: 'Product',
+    options: products
+      .filter((value) => presentProducts.has(value))
+      .map((value) => ({ value, label: productLabel(value) })),
+  },
+  {
+    name: 'status',
+    legend: 'Status',
+    options: statuses
+      .filter((value) => presentStatuses.has(value))
+      .map((value) => ({ value, label: statusLabel(value) })),
+  },
+];
+---
+
+<BaseLayout
+  title="Use cases"
+  description="Example library of Cortex use cases with problem statements, data sources, and success criteria."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">Library</p>
+      <h1>Use cases</h1>
+      <p>
+        Problem statements a Domain Consultant can reuse as a starting point. These entries are
+        examples. They do not describe a real engagement.
+      </p>
+    </header>
+    <div class="layout with-filters">
+      <FilterBar groups={groups} />
+      <div>
+        <p id="filter-empty" class="empty" hidden>No use cases match these filters.</p>
+        <div class="card-grid">
+          {usecases.map((entry) => <CatalogueCard collection="usecases" entry={entry} />)}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,86 @@
+---
+const base = import.meta.env.BASE_URL;
+const path = Astro.url.pathname;
+const items = [
+  { href: `${base}assets/`, label: 'Assets' },
+  { href: `${base}use-cases/`, label: 'Use cases' },
+  { href: `${base}snippets/`, label: 'Snippets' },
+  { href: `${base}roadmap/`, label: 'Roadmap' },
+  { href: `${base}about/`, label: 'About' },
+  { href: `${base}search/`, label: 'Search' },
+];
+
+function current(href: string): boolean {
+  return path === href || path.startsWith(href);
+}
+---
+
+<header class="site-header" data-pagefind-ignore>
+  <div class="wrap header-inner">
+    <a class="brand" href={base} aria-label="Cortex Field Kit home">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#1c2420"></rect>
+        <rect x="6.5" y="6.5" width="19" height="19" rx="2" fill="none" stroke="#f0c36a" stroke-width="1.4"></rect>
+        <path d="M16 6.5v19M6.5 16h19" stroke="#9ee0d6" stroke-width="1.2"></path>
+        <circle cx="16" cy="16" r="2" fill="#f0c36a"></circle>
+      </svg>
+      <span class="brand-text">
+        <strong>Cortex Field Kit</strong>
+        <span>Field catalogue</span>
+      </span>
+    </a>
+    <button id="menu-button" class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      Menu
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary">
+      {
+        items.map((item) => (
+          <a href={item.href} aria-current={current(item.href) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false">Theme</button>
+  </div>
+</header>
+
+<script>
+  const menuButton = document.querySelector<HTMLButtonElement>('#menu-button');
+  const nav = document.querySelector<HTMLElement>('#site-nav');
+  menuButton?.addEventListener('click', () => {
+    const open = nav?.hasAttribute('data-open');
+    if (open) nav?.removeAttribute('data-open');
+    else nav?.setAttribute('data-open', '');
+    menuButton.setAttribute('aria-expanded', open ? 'false' : 'true');
+  });
+
+  const themeButton = document.querySelector<HTMLButtonElement>('#theme-toggle');
+  const root = document.documentElement;
+
+  function currentTheme(): 'light' | 'dark' {
+    const explicit = root.getAttribute('data-theme');
+    if (explicit === 'light' || explicit === 'dark') return explicit;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  function paintTheme(): void {
+    if (!themeButton) return;
+    const mode = currentTheme();
+    themeButton.setAttribute('aria-pressed', mode === 'dark' ? 'true' : 'false');
+    themeButton.textContent = mode === 'dark' ? 'Light mode' : 'Dark mode';
+  }
+
+  themeButton?.addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try {
+      localStorage.setItem('theme', next);
+    } catch {
+      /* Ignore storage failures. The choice still applies for this view. */
+    }
+    paintTheme();
+  });
+
+  paintTheme();
+</script>

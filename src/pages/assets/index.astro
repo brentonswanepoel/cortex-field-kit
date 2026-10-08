@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CatalogueCard from '../../components/CatalogueCard.astro';
+import FilterBar from '../../components/FilterBar.astro';
+import { getCatalogue } from '../../lib/catalogue';
+import { assetTypes, products, statuses } from '../../content.config';
+import { productLabel, statusLabel, typeLabel } from '../../lib/format';
+
+const { assets } = await getCatalogue();
+const present = {
+  product: new Set(assets.flatMap((entry) => entry.data.products)),
+  type: new Set(assets.map((entry) => entry.data.type)),
+  status: new Set(assets.map((entry) => entry.data.status)),
+};
+
+const groups = [
+  {
+    name: 'product',
+    legend: 'Product',
+    options: products.filter((value) => present.product.has(value)).map((value) => ({
+      value,
+      label: productLabel(value),
+    })),
+  },
+  {
+    name: 'type',
+    legend: 'Type',
+    options: assetTypes.filter((value) => present.type.has(value)).map((value) => ({
+      value,
+      label: typeLabel(value),
+    })),
+  },
+  {
+    name: 'status',
+    legend: 'Status',
+    options: statuses.filter((value) => present.status.has(value)).map((value) => ({
+      value,
+      label: statusLabel(value),
+    })),
+  },
+];
+---
+
+<BaseLayout
+  title="Assets"
+  description="Example catalogue of reusable Cortex assets, with filters for product, type, and status."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">Catalogue</p>
+      <h1>Assets</h1>
+      <p>
+        Reusable delivery assets. Entries marked Example are placeholder illustrations for the
+        catalogue, not production content.
+      </p>
+    </header>
+    <div class="layout with-filters">
+      <FilterBar groups={groups} />
+      <div>
+        <p id="filter-empty" class="empty" hidden>No assets match these filters.</p>
+        <div class="card-grid">
+          {assets.map((entry) => <CatalogueCard collection="assets" entry={entry} />)}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

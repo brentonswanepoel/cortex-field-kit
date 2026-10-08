@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import '@fontsource/newsreader/400.css';
+import '@fontsource/newsreader/600.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  indexed?: boolean;
+  home?: boolean;
+}
+
+const { title, description, indexed = true, home = false } = Astro.props;
+const fullTitle = home ? 'Cortex Field Kit' : `${title} · Cortex Field Kit`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const rssHref = `${import.meta.env.BASE_URL}rss.xml`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          if (stored === 'light' || stored === 'dark') {
+            document.documentElement.setAttribute('data-theme', stored);
+          }
+        } catch (error) {
+          /* Storage can be blocked. The system theme still applies. */
+        }
+      })();
+    </script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="alternate" type="application/rss+xml" title="Cortex Field Kit" href={rssHref} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical.href} />
+  </head>
+  <body data-pagefind-ignore={indexed ? undefined : 'all'}>
+    <a class="skip" href="#content">Skip to content</a>
+    <Header />
+    <main id="content" data-pagefind-body>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

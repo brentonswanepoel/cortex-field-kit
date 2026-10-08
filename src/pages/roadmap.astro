@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { formatDate } from '../lib/format';
+import { loadRoadmap, roadmapGroups } from '../lib/roadmap';
+
+const roadmap = await loadRoadmap();
+
+function inGroup(labels: string[], label: string): boolean {
+  return labels.includes(label);
+}
+---
+
+<BaseLayout
+  title="Roadmap"
+  description="Open Cortex Field Kit work, read from GitHub Issues at build time."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">Backlog</p>
+      <h1>Roadmap</h1>
+      <p>
+        Open issues labelled <code>asset</code>, <code>use-case</code>, or <code>site-feature</code>.
+        The list is collected when the site is built. Issue titles are published, so they must stay
+        free of customer information.
+      </p>
+    </header>
+    {
+      !roadmap.available && (
+        <div class="notice" role="status">
+          <h2>Roadmap unavailable</h2>
+          <p>{roadmap.reason}</p>
+        </div>
+      )
+    }
+    {
+      roadmap.available &&
+        roadmapGroups.map((group) => {
+          const issues = roadmap.issues.filter((issue) => inGroup(issue.labels, group.label));
+          return (
+            <section class="section" aria-labelledby={`group-${group.label}`}>
+              <div class="section-head">
+                <h2 id={`group-${group.label}`}>{group.title}</h2>
+              </div>
+              {issues.length === 0 ? (
+                <p class="empty">No open issues with this label.</p>
+              ) : (
+                <ol class="update-list">
+                  {issues.map((issue) => (
+                    <li>
+                      <a href={issue.url}>
+                        <span class="update-kind">#{issue.number}</span>
+                        <span class="update-title">{issue.title}</span>
+                        <time datetime={issue.updatedAt}>
+                          {issue.updatedAt ? formatDate(new Date(issue.updatedAt)) : ''}
+                        </time>
+                      </a>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </section>
+          );
+        })
+    }
+  </div>
+</BaseLayout>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://brentonswanepoel.github.io/cortex-field-kit/sitemap-index.xml

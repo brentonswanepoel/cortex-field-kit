@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CatalogueCard from '../../components/CatalogueCard.astro';
+import FilterBar from '../../components/FilterBar.astro';
+import { getCatalogue } from '../../lib/catalogue';
+import { products } from '../../content.config';
+import { productLabel } from '../../lib/format';
+
+const { snippets } = await getCatalogue();
+const present = new Set(snippets.flatMap((entry) => entry.data.products));
+const groups = [
+  {
+    name: 'product',
+    legend: 'Product',
+    options: products
+      .filter((value) => present.has(value))
+      .map((value) => ({ value, label: productLabel(value) })),
+  },
+];
+---
+
+<BaseLayout
+  title="Snippets"
+  description="Short example XQL notes tagged with MITRE ATT&CK technique IDs."
+>
+  <div class="wrap">
+    <header class="page-head">
+      <p class="eyebrow">Notes</p>
+      <h1>Snippets</h1>
+      <p>
+        Short example notes for hunts and detections. Each one is tagged with ATT&CK technique IDs
+        and uses documentation addresses only.
+      </p>
+    </header>
+    <div class="layout with-filters">
+      <FilterBar groups={groups} />
+      <div>
+        <p id="filter-empty" class="empty" hidden>No snippets match these filters.</p>
+        <div class="card-grid">
+          {snippets.map((entry) => <CatalogueCard collection="snippets" entry={entry} />)}
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

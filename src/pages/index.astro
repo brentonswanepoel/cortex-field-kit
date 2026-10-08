@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCatalogue } from '../lib/catalogue';
+import { collectionLabels, entryHref, formatDate } from '../lib/format';
+
+const catalogue = await getCatalogue();
+const latest = catalogue.latest.slice(0, 8);
+const description =
+  'A public catalogue of reusable, sanitized Cortex use cases and assets for Domain Consultants.';
+---
+
+<BaseLayout title="Cortex Field Kit" description={description} home>
+  <div class="wrap">
+    <header class="masthead">
+      <p class="eyebrow">For Cortex Domain Consultants</p>
+      <h1>Cortex Field Kit</h1>
+      <p class="lede">
+        A public portfolio and catalogue of reusable use cases, detection notes, and delivery
+        assets for XSIAM, XDR, XSOAR, and Cortex Cloud.
+      </p>
+      <p class="disclaimer">
+        Every seeded entry is placeholder example content. Cortex Field Kit is independent and is
+        not endorsed by Palo Alto Networks.
+      </p>
+      <div class="actions">
+        <a class="button primary" href={`${import.meta.env.BASE_URL}assets/`}>Browse assets</a>
+        <a class="button secondary" href={`${import.meta.env.BASE_URL}use-cases/`}>Use-case library</a>
+      </div>
+      <ul class="stats">
+        <li>
+          <strong>{catalogue.assets.length}</strong>
+          <span>Assets in the catalogue</span>
+        </li>
+        <li>
+          <strong>{catalogue.usecases.length}</strong>
+          <span>Use cases in the library</span>
+        </li>
+        <li>
+          <strong>{catalogue.snippets.length}</strong>
+          <span>Snippets</span>
+        </li>
+      </ul>
+    </header>
+
+    <section class="section" aria-labelledby="latest-heading">
+      <div class="section-head">
+        <h2 id="latest-heading">Latest updates</h2>
+        <a href={`${import.meta.env.BASE_URL}rss.xml`}>RSS</a>
+      </div>
+      <ol class="update-list">
+        {
+          latest.map((item) => (
+            <li>
+              <a href={entryHref(item.collection, item.entry.id)}>
+                <span class="update-kind">{collectionLabels[item.collection]}</span>
+                <span class="update-title">{item.entry.data.title}</span>
+                <time datetime={item.entry.data.updated.toISOString()}>
+                  {formatDate(item.entry.data.updated)}
+                </time>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="section" aria-labelledby="start-heading">
+      <div class="section-head">
+        <h2 id="start-heading">Start here</h2>
+      </div>
+      <div class="card-grid">
+        <article class="card">
+          <a href={`${import.meta.env.BASE_URL}assets/`}>
+            <p class="kicker">Catalogue</p>
+            <h2>Assets</h2>
+            <p class="summary">
+              Lab kits, rules, hunts, playbooks, dashboards, and templates. Filter by product, type,
+              and status.
+            </p>
+          </a>
+        </article>
+        <article class="card">
+          <a href={`${import.meta.env.BASE_URL}snippets/`}>
+            <p class="kicker">Notes</p>
+            <h2>Snippets</h2>
+            <p class="summary">
+              Short XQL notes tagged with ATT&CK technique IDs. Written as examples, not as tenant
+              hunts.
+            </p>
+          </a>
+        </article>
+        <article class="card">
+          <a href={`${import.meta.env.BASE_URL}roadmap/`}>
+            <p class="kicker">Backlog</p>
+            <h2>Roadmap</h2>
+            <p class="summary">
+              Open GitHub issues labelled asset, use-case, or site-feature, read when the site is
+              built.
+            </p>
+          </a>
+        </article>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,9 @@
+---
+interface Props {
+  example: boolean;
+}
+
+const { example } = Astro.props;
+---
+
+{example && <span class="badge badge-example">Example</span>}
